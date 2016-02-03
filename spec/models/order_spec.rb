@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Order, type: :model do
 
-  required_fields = %w(total_price completed_date state billing_address shipping_address)
+  required_fields = %w(total_price state billing_address shipping_address)
   other_fields = %w(completed_date)
 
   include_examples 'test fields', required_fields, other_fields

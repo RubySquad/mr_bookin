@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  # let!(:user) { create(:user) }
+  let(:user) { FactoryGirl.create(:user) }
 
   # required_fields = %w(email password firstname lastname)
 
-  # required_fields = %w(email firstname lastname)
+  required_fields = %w(email firstname lastname)
 
-  # include_examples 'test fields', required_fields, []
+  include_examples 'test fields', required_fields, []
   
   it {should have_db_column(:encrypted_password)}
   it {should respond_to(:password)}
