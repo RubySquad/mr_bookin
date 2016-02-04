@@ -8,11 +8,19 @@ class User < ActiveRecord::Base
   # validates :password, presence: true
   validates :firstname, presence: true
   validates :lastname, presence: true
+  validates :role_id, presence: true
 
   has_many :orders
   has_many :ratings
+  has_many :addresses
   belongs_to :role
   
-  scope :current_order, ->{joins(:orders).where(orders:{state: "in progress"}).last}
+  def current_order
+    orders.where(state: "in progress").last
+  end
+  
+  def default_address
+    addresses.where(default: true).first
+  end
 
 end
