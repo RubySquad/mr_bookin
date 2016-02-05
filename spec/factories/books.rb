@@ -5,6 +5,6 @@ FactoryGirl.define do
     price { Faker::Commerce.price }
     stock { Faker::Number.number(2) }
     author
-    category
+    category { Category.find_or_create_by(title: Faker::Book.genre) }
   end
 end

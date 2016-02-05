@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:user) { FactoryGirl.build(:user) }
+  let(:user) { build(:user) }
   
   required_fields = %w(email firstname lastname role_id)
 
@@ -18,9 +18,9 @@ RSpec.describe User, type: :model do
     expect(build(:user).orders).to respond_to :new
   end
   it 'user should be able to return a current order in progress' do
-    @user =  FactoryGirl.create(:user)
-    @credit_card =  FactoryGirl.create(:credit_card, user: @user)
-    @order = FactoryGirl.create(:order, state: "in progress", user: @user, credit_card: @credit_card)
+    @user = create(:user)
+    @order = create(:order, state: Order::STATUSES[1], user: @user)
     expect(@user.current_order).to eql @order
   end
+  it '.default_address'
 end

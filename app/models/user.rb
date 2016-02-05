@@ -22,5 +22,9 @@ class User < ActiveRecord::Base
   def default_address
     addresses.where(default: true).first
   end
+  
+  def recent_orders(count=nil)
+    orders.order(id: :desc).limit(count)
+  end
 
 end

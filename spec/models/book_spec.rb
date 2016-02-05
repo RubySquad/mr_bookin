@@ -9,4 +9,6 @@ RSpec.describe Book, type: :model do
   it {should belong_to(:author)}
   it {should belong_to(:category)}
   it {should have_many(:ratings)}
+  
+  it 'bestsellers'
 end

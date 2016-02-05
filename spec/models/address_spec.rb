@@ -11,17 +11,15 @@ RSpec.describe Address, type: :model do
   
   context '.default!' do
     it 'set address default true' do
-      @user =  FactoryGirl.create(:user)
-      @addresses = FactoryGirl.create_list(:address, 3, user: @user, default: true)
-      @test_address = FactoryGirl.create(:address, user: @user, default: false)
+      @user = create(:user)
+      @addresses = create_list(:address, 3, user: @user, default: true)
+      @test_address = create(:address, user: @user, default: false)
       @test_address.default!
       expect(@test_address).to be_default
-      @addresses.each do |address|
+      @user.addresses.where.not(id: @test_address.id).each do |address|
         expect(address).not_to be_default
       end
     end
-    it 'set address default false'
-    it 'default not change'
   end
   
 end
