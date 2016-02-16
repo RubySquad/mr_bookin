@@ -9,4 +9,9 @@ RSpec.describe Category, type: :model do
   
   it {should validate_uniqueness_of(:title)}
   it {should have_many(:books)}
+  
+  it '.to_s' do
+    @category = create(:category)
+    expect(@category.to_s).to eql("#{@category.title}")
+  end
 end

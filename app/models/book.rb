@@ -18,5 +18,9 @@ class Book < ActiveRecord::Base
   scope :by_category, lambda {|category|
     where(category: category)
   }
-#User.joins("LEFT JOIN bookmarks ON bookmarks.bookmarkable_type = 'Post' AND bookmarks.user_id = users.id")
+
+  def to_s
+    "#{title} by #{author}"
+  end
+  
 end

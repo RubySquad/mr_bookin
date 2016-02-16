@@ -1,0 +1,63 @@
+<!--<p>-->
+<!--  <strong>Credit card:</strong>-->
+<!--  <%= @order.credit_card %>-->
+<!--</p>-->
+
+<!--<p>-->
+<!--  <strong>Shipping address:</strong>-->
+<!--  <%= @order.shipping_address %>-->
+<!--</p>-->
+
+<!--<p>-->
+<!--  <strong>Billing address:</strong>-->
+<!--  <%= @order.billing_address %>-->
+<!--</p>-->
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Book</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @order_items.each_with_index do |order_item, index| %>
+      <tr>
+        <td>
+          <%= link_to book_path(order_item.book) do%>
+            <%= image_tag("blank_book.jpg") %>
+          <% end %>
+          </td>
+        <td>
+          <h4>
+            <%= link_to book_path(order_item.book) do%>
+              <%= order_item.book %>
+            <% end %>
+          </h4>
+          <%= order_item.book.description %>
+        </td>
+        <td><%= order_item.price %></td>
+        <td><%= order_item.quantity %></td>
+        <td><%= order_item.price * order_item.quantity %></td>
+        <td><%= link_to 'X', order_order_item_path(order_item.order, order_item, cart: true), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td colspan="3"></td>
+      <td><strong>Subtotal:&nbsp</strong></td>
+      <td>
+        <strong>
+          <%= @order.total_price %>
+        </strong>
+      </td>
+    </tr>      
+  </tbody>
+</table>
+<br/>
+<%= link_to 'Empty cart', clear_cart_path, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+<%= link_to 'Continue shopping', books_path, class: 'btn btn-primary' %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204112808) do
+ActiveRecord::Schema.define(version: 20160213180553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,8 +99,19 @@ ActiveRecord::Schema.define(version: 20160204112808) do
   add_index "order_items", ["book_id"], name: "index_order_items_on_book_id", using: :btree
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
 
+  create_table "order_shippings", force: :cascade do |t|
+    t.integer  "order_id"
+    t.integer  "shipping_id"
+    t.decimal  "price",       precision: 6, scale: 2, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "order_shippings", ["order_id"], name: "index_order_shippings_on_order_id", using: :btree
+  add_index "order_shippings", ["shipping_id"], name: "index_order_shippings_on_shipping_id", using: :btree
+
   create_table "orders", force: :cascade do |t|
-    t.string   "state",                                    default: "in progress", null: false
+    t.string   "state",                                    default: "in_progress", null: false
     t.datetime "completed_date"
     t.decimal  "total_price",      precision: 6, scale: 2, default: 0.0,           null: false
     t.integer  "user_id"
@@ -116,11 +127,12 @@ ActiveRecord::Schema.define(version: 20160204112808) do
 
   create_table "ratings", force: :cascade do |t|
     t.text     "review"
-    t.integer  "rating",     null: false
+    t.integer  "rating",                     null: false
     t.integer  "user_id"
     t.integer  "book_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "approved",   default: false, null: false
   end
 
   add_index "ratings", ["book_id"], name: "index_ratings_on_book_id", using: :btree
@@ -133,6 +145,13 @@ ActiveRecord::Schema.define(version: 20160204112808) do
   end
 
   add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+
+  create_table "shippings", force: :cascade do |t|
+    t.string   "name",                               null: false
+    t.decimal  "price",      precision: 6, scale: 2, null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "firstname",                           null: false
@@ -150,6 +169,8 @@ ActiveRecord::Schema.define(version: 20160204112808) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.integer  "role_id"
+    t.string   "provider"
+    t.string   "uid"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
@@ -163,6 +184,8 @@ ActiveRecord::Schema.define(version: 20160204112808) do
   add_foreign_key "credit_cards", "users"
   add_foreign_key "order_items", "books"
   add_foreign_key "order_items", "orders"
+  add_foreign_key "order_shippings", "orders"
+  add_foreign_key "order_shippings", "shippings"
   add_foreign_key "orders", "credit_cards"
   add_foreign_key "orders", "users"
   add_foreign_key "ratings", "books"

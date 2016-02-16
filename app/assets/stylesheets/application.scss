@@ -1,0 +1,75 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+$white_opaque: rgba(250, 250, 250, .5);
+$dark: #1F7972;
+
+body {
+    height: 100%;
+    // background: -webkit-linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
+    // background:    -moz-linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
+    // background:     -ms-linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
+    // background:      -o-linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
+    // background:         linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
+    background:         linear-gradient(90deg, #337AB7, #EAECC6, #337AB7);
+}
+
+#book-title {
+    font-size: 2em;
+    display: inline;
+}
+#book-author, #book-price {
+    display: inline;
+}
+#book-price {
+    font-size: 2em;
+}
+.carousel-inner {
+    .item {
+        margin: 20px;
+    //     #background{
+    //         background-image: url("http://lorempixel.com/1200/400/nature/");
+    //         opacity: 0.2;
+    //     }
+    }
+}
+.carousel-indicators {
+    li {
+        border-color: #000;
+    }
+    .active {
+        background-color: #777;
+    }
+}
+
+#book-buyer-section {
+    margin-bottom: 40px;
+}
+
+#book-quantity {
+    // max-width: 70px;
+}
+
+#main_content {
+	width: 80%;
+	background: $white_opaque;
+	margin: 3em auto 0 auto;
+	border-radius: 7px;
+	-webkit-box-shadow: 0 0 4px 3px rgba(0,0,0,.3);
+	box-shadow: 0 0 4px 4px rgba(0,0,0,.03);
+	padding: 1em 0;
+}
+
+.navbar {
+    background-color: rgb(154, 186, 191);
+}
+
+// #book-image {
+//     border: 1px solid red;
+//     img {
+//         border: 1px solid blue;
+//     }
+// }
+// #book-decription {
+//     border: 1px solid red;
+// }

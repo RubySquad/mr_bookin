@@ -41,3 +41,6 @@ Rails.application.configure do
   
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
+
+ENV['FACEBOOK_KEY'] = '1538861843082957'
+ENV['FACEBOOK_SECRET'] = '32f329e10f054f30b5edc6710b83e9bf'

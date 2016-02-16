@@ -20,11 +20,24 @@ require 'rails_helper'
 
 RSpec.describe AuthorsController, type: :controller do
 
+  before do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+    @user = create(:user)
+    @ability = Object.new
+    @ability.extend(CanCan::Ability)
+    allow(@controller).to receive(:current_ability).and_return(@ability)
+    @ability.can :manage, :all
+    sign_in(@user)
+  end
+
+  let(:author) { build(:author) }
+  let(:other_author) { build(:author) }
   # This should return the minimal set of attributes required to create a valid
   # Author. As you add validations to Author, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # skip("Add a hash of attributes valid for your model")
+    author.attributes
   }
 
   let(:invalid_attributes) {
@@ -103,14 +116,18 @@ RSpec.describe AuthorsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        other_author.attributes
       }
 
       it "updates the requested author" do
         author = Author.create! valid_attributes
         put :update, {:id => author.to_param, :author => new_attributes}, valid_session
         author.reload
-        skip("Add assertions for updated state")
+        test_fields = %w(firstname lastname biography)
+        test_fields.each do |field|
+          expect(author[field]).to eq(other_author[field])
+        end
+        # skip("Add assertions for updated state")
       end
 
       it "assigns the requested author as @author" do

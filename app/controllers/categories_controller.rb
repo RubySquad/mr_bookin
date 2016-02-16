@@ -1,10 +1,11 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
+  # before_action :set_category, only: [:show, :edit, :update, :destroy]
 
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all
+    # @categories = Category.all
   end
 
   # GET /categories/1

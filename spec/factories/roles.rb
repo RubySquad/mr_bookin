@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :role do
-    name "Test" #{ Faker::Lorem.word }
+    name "Customer" #{ Faker::Lorem.word }
   end
 end

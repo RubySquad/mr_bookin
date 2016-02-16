@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-md-3">
+        <strong>Checkout</strong>
+    </div>
+    <div class="col-md-9">    
+        <% @steps.each_with_index do |item, index| %>
+            <%= link_to item.upcase, '#', id: "link-#{item}" %>
+        <% end %>
+    </div>
+
+</div>
+
+<div id = "checkoutCarousel" class = "carousel slide">
+   
+   <!-- Carousel items -->
+   <div class = "carousel-inner">
+      <% @steps.each_with_index do |item, index| %>
+          <div class = "item<%= index == 0 ? " active" : "" %>">
+            <div id="background">
+            <%= render partial: "orders/checkout/#{item}" %>
+            </div>
+          </div>
+      <% end %>
+   </div>
+   
+</div>
+
+<div style = "text-align:center;">
+  <input type = "button" class = "btn btn-default prev-slide" value = "Previous">
+  <input type = "button" class = "btn btn-primary next-slide" value = "Next">
+</div>
+
+<script>
+  $(function() {
+    // Cycles to the previous item
+    $(".prev-slide").click(function() {
+      $("#checkoutCarousel").carousel('prev');
+    });
+      
+    // Cycles to the next item
+    $(".next-slide").click(function() {
+      $("#checkoutCarousel").carousel('next');
+    });
+      
+    <% @steps.each_with_index do |item, index| %>
+      $("<%= "#link-#{item}" %>").click(function() {
+        $("#checkoutCarousel").carousel(<%= index %>);
+      });
+    <% end %>
+  });
+</script>

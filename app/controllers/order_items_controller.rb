@@ -1,10 +1,12 @@
 class OrderItemsController < ApplicationController
-  before_action :set_order_item, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource :order
+  load_and_authorize_resource :order_item, :through => :order
+  # before_action :set_order_item, only: [:show, :edit, :update, :destroy]
 
   # GET /order_items
   # GET /order_items.json
   def index
-    @order_items = OrderItem.all
+    # @order_items = OrderItem.all
   end
 
   # GET /order_items/1
@@ -56,7 +58,7 @@ class OrderItemsController < ApplicationController
   def destroy
     @order_item.destroy
     respond_to do |format|
-      format.html { redirect_to order_items_url, notice: 'Order item was successfully destroyed.' }
+      format.html { redirect_to params[:cart] ? cart_url : order_url(@order_item.order), notice: 'Order item was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

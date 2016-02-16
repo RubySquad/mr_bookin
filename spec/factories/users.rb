@@ -8,6 +8,6 @@ FactoryGirl.define do
     firstname { Faker::Name.first_name }
     lastname  { Faker::Name.last_name }
     password { Faker::Internet.password }
-    role { Role.find_or_create_by(name: "Test") }
+    role { Role.find_or_create_by(name: "Customer") }
   end
 end

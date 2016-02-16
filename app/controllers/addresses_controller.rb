@@ -1,10 +1,11 @@
 class AddressesController < ApplicationController
-  before_action :set_address, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
+  # before_action :set_address, only: [:show, :edit, :update, :destroy]
 
   # GET /addresses
   # GET /addresses.json
   def index
-    @addresses = Address.all
+    # @addresses = Address.all
   end
 
   # GET /addresses/1

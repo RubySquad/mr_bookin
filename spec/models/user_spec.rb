@@ -19,8 +19,28 @@ RSpec.describe User, type: :model do
   end
   it 'user should be able to return a current order in progress' do
     @user = create(:user)
-    @order = create(:order, state: Order::STATUSES[1], user: @user)
+    @order = create(:order, state: 'in_progress', user: @user)
     expect(@user.current_order).to eql @order
   end
-  it '.default_address'
+  it '.default_address' do
+    @user = create(:user)
+    create_list(:address, 3, user: @user)
+    @default_address = create(:address, user: @user, default: true)
+    create_list(:address, 3, user: @user)
+    expect(@user.default_address).to eql @default_address
+  end
+  context '.recent_orders' do
+    before do
+      @user = create(:user)
+      @orders = create_list(:order, 10, user: @user)
+      @recent_orders = @orders.reverse
+    end
+    it 'without parametrs' do
+      expect(@user.recent_orders).to eq(@recent_orders)
+    end
+    it 'with parametr' do
+      @recent_orders.pop(4)
+      expect(@user.recent_orders(6)).to eq(@recent_orders)
+    end
+  end
 end

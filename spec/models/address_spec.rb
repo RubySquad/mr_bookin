@@ -22,4 +22,22 @@ RSpec.describe Address, type: :model do
     end
   end
   
+  it '.to_s' do
+    @address = create(:address)
+    test_string = "#{@address.address},\n"
+    test_string << "#{@address.city},\n"  
+    test_string << "#{@address.country.name}\n"
+    test_string << "#{@address.zipcode}\n"
+    test_string << "phone: #{@address.phone}"
+    expect(@address.to_s).to eql(test_string)
+  end
+
+  it '.from_string' do
+    @address = create(:address)
+    test_string = @address.to_s
+    test_address = Address.from_string(test_string)
+    required_fields.each do |field|
+      expect(test_address[field]).to eq(@address[field])
+    end
+  end 
 end

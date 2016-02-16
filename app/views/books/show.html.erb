@@ -1,34 +1,23 @@
-<p id="notice"><%= notice %></p>
+<%= render partial: 'card', object: @book %>
 
-<p>
-  <strong>Title:</strong>
-  <%= @book.title %>
-</p>
+<h2>Reviews</h2>
+<%= link_to 'Add review to this book', new_book_rating_path(book_id: @book.id) %>
+<% @ratings.each do |item| %>
+    <p>
+        <%= item.rating %>
+    </p>
+    <p>
+        by <%= item.user %>
+    </p>
+    <p>
+        <%= item.created_at %>
+    </p>
+    <p>
+        <%= item.review %>
+    </p>
+<% end %>
 
-<p>
-  <strong>Description:</strong>
-  <%= @book.description %>
-</p>
-
-<p>
-  <strong>Price:</strong>
-  <%= @book.price %>
-</p>
-
-<p>
-  <strong>Stock:</strong>
-  <%= @book.stock %>
-</p>
-
-<p>
-  <strong>Author:</strong>
-  <%= @book.author %>
-</p>
-
-<p>
-  <strong>Category:</strong>
-  <%= @book.category %>
-</p>
-
+<% if false %>
 <%= link_to 'Edit', edit_book_path(@book) %> |
-<%= link_to 'Back', books_path %>
+<%= link_to 'Back', :back %>
+<% end %>

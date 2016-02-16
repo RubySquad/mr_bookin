@@ -20,11 +20,22 @@ require 'rails_helper'
 
 RSpec.describe OrdersController, type: :controller do
 
+  before do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+    @user = create(:user)
+    @ability = Object.new
+    @ability.extend(CanCan::Ability)
+    allow(@controller).to receive(:current_ability).and_return(@ability)
+    @ability.can :manage, :all
+    sign_in(@user)
+  end
+
   # This should return the minimal set of attributes required to create a valid
   # Order. As you add validations to Order, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # skip("Add a hash of attributes valid for your model")
+    build(:order).attributes
   }
 
   let(:invalid_attributes) {
@@ -52,12 +63,12 @@ RSpec.describe OrdersController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new order as @order" do
-      get :new, {}, valid_session
-      expect(assigns(:order)).to be_a_new(Order)
-    end
-  end
+  # describe "GET #new" do
+  #   it "assigns a new order as @order" do
+  #     get :new, {}, valid_session
+  #     expect(assigns(:order)).to be_a_new(Order)
+  #   end
+  # end
 
   describe "GET #edit" do
     it "assigns the requested order as @order" do
@@ -103,14 +114,19 @@ RSpec.describe OrdersController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        # skip("Add a hash of attributes valid for your model")
+        build(:order).attributes
       }
 
       it "updates the requested order" do
         order = Order.create! valid_attributes
         put :update, {:id => order.to_param, :order => new_attributes}, valid_session
         order.reload
-        skip("Add assertions for updated state")
+        # skip("Add assertions for updated state")
+        test_fields = %w(total_price state billing_address shipping_address completed_date)
+        test_fields.each do |field|
+          expect(order[field]).to eq(new_attributes[field])
+        end
       end
 
       it "assigns the requested order as @order" do
@@ -141,19 +157,19 @@ RSpec.describe OrdersController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested order" do
-      order = Order.create! valid_attributes
-      expect {
-        delete :destroy, {:id => order.to_param}, valid_session
-      }.to change(Order, :count).by(-1)
-    end
+  # describe "DELETE #destroy" do
+  #   it "destroys the requested order" do
+  #     order = Order.create! valid_attributes
+  #     expect {
+  #       delete :destroy, {:id => order.to_param}, valid_session
+  #     }.to change(Order, :count).by(-1)
+  #   end
 
-    it "redirects to the orders list" do
-      order = Order.create! valid_attributes
-      delete :destroy, {:id => order.to_param}, valid_session
-      expect(response).to redirect_to(orders_url)
-    end
-  end
+  #   it "redirects to the orders list" do
+  #     order = Order.create! valid_attributes
+  #     delete :destroy, {:id => order.to_param}, valid_session
+  #     expect(response).to redirect_to(orders_url)
+  #   end
+  # end
 
 end

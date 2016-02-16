@@ -20,11 +20,23 @@ require 'rails_helper'
 
 RSpec.describe RatingsController, type: :controller do
 
+  before do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+    @user = create(:user)
+    @ability = Object.new
+    @ability.extend(CanCan::Ability)
+    allow(@controller).to receive(:current_ability).and_return(@ability)
+    @ability.can :manage, :all
+    sign_in(@user)
+  end
+
+  let(:book) { create(:book) }
   # This should return the minimal set of attributes required to create a valid
   # Rating. As you add validations to Rating, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # skip("Add a hash of attributes valid for your model")
+    build(:rating, book: book).attributes
   }
 
   let(:invalid_attributes) {
@@ -39,7 +51,7 @@ RSpec.describe RatingsController, type: :controller do
   describe "GET #index" do
     it "assigns all ratings as @ratings" do
       rating = Rating.create! valid_attributes
-      get :index, {}, valid_session
+      get :index, {book_id: book.id}, valid_session
       expect(assigns(:ratings)).to eq([rating])
     end
   end
@@ -47,14 +59,14 @@ RSpec.describe RatingsController, type: :controller do
   describe "GET #show" do
     it "assigns the requested rating as @rating" do
       rating = Rating.create! valid_attributes
-      get :show, {:id => rating.to_param}, valid_session
+      get :show, {:id => rating.to_param, book_id: book.id}, valid_session
       expect(assigns(:rating)).to eq(rating)
     end
   end
 
   describe "GET #new" do
     it "assigns a new rating as @rating" do
-      get :new, {}, valid_session
+      get :new, {book_id: book.id}, valid_session
       expect(assigns(:rating)).to be_a_new(Rating)
     end
   end
@@ -62,7 +74,7 @@ RSpec.describe RatingsController, type: :controller do
   describe "GET #edit" do
     it "assigns the requested rating as @rating" do
       rating = Rating.create! valid_attributes
-      get :edit, {:id => rating.to_param}, valid_session
+      get :edit, {:id => rating.to_param, book_id: book.id}, valid_session
       expect(assigns(:rating)).to eq(rating)
     end
   end
@@ -71,30 +83,30 @@ RSpec.describe RatingsController, type: :controller do
     context "with valid params" do
       it "creates a new Rating" do
         expect {
-          post :create, {:rating => valid_attributes}, valid_session
+          post :create, {:rating => valid_attributes, book_id: book.id}, valid_session
         }.to change(Rating, :count).by(1)
       end
 
       it "assigns a newly created rating as @rating" do
-        post :create, {:rating => valid_attributes}, valid_session
+        post :create, {:rating => valid_attributes, book_id: book.id}, valid_session
         expect(assigns(:rating)).to be_a(Rating)
         expect(assigns(:rating)).to be_persisted
       end
 
       it "redirects to the created rating" do
-        post :create, {:rating => valid_attributes}, valid_session
-        expect(response).to redirect_to(Rating.last)
+        post :create, {:rating => valid_attributes, book_id: book.id}, valid_session
+        expect(response).to redirect_to(book)
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved rating as @rating" do
-        post :create, {:rating => invalid_attributes}, valid_session
+        post :create, {:rating => invalid_attributes, book_id: book.id}, valid_session
         expect(assigns(:rating)).to be_a_new(Rating)
       end
 
       it "re-renders the 'new' template" do
-        post :create, {:rating => invalid_attributes}, valid_session
+        post :create, {:rating => invalid_attributes, book_id: book.id}, valid_session
         expect(response).to render_template("new")
       end
     end
@@ -103,39 +115,44 @@ RSpec.describe RatingsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        # skip("Add a hash of attributes valid for your model")
+        build(:rating, book: book).attributes
       }
 
       it "updates the requested rating" do
         rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => new_attributes}, valid_session
+        put :update, {:id => rating.to_param, book_id: book.id, :rating => new_attributes}, valid_session
         rating.reload
-        skip("Add assertions for updated state")
+        # skip("Add assertions for updated state")
+        test_fields = %w(review rating)
+        test_fields.each do |field|
+          expect(rating[field]).to eq(new_attributes[field])
+        end
       end
 
       it "assigns the requested rating as @rating" do
         rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => valid_attributes}, valid_session
+        put :update, {:id => rating.to_param, book_id: book.id, :rating => valid_attributes}, valid_session
         expect(assigns(:rating)).to eq(rating)
       end
 
-      it "redirects to the rating" do
+      it "redirects to the book" do
         rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => valid_attributes}, valid_session
-        expect(response).to redirect_to(rating)
+        put :update, {:id => rating.to_param, book_id: book.id, :rating => valid_attributes}, valid_session
+        expect(response).to redirect_to(book)
       end
     end
 
     context "with invalid params" do
       it "assigns the rating as @rating" do
         rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => invalid_attributes}, valid_session
+        put :update, {:id => rating.to_param, book_id: book.id, :rating => invalid_attributes}, valid_session
         expect(assigns(:rating)).to eq(rating)
       end
 
       it "re-renders the 'edit' template" do
         rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => invalid_attributes}, valid_session
+        put :update, {:id => rating.to_param, book_id: book.id, :rating => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
     end
@@ -145,14 +162,14 @@ RSpec.describe RatingsController, type: :controller do
     it "destroys the requested rating" do
       rating = Rating.create! valid_attributes
       expect {
-        delete :destroy, {:id => rating.to_param}, valid_session
+        delete :destroy, {:id => rating.to_param, book_id: book.id}, valid_session
       }.to change(Rating, :count).by(-1)
     end
 
-    it "redirects to the ratings list" do
+    it "redirects to the book" do
       rating = Rating.create! valid_attributes
-      delete :destroy, {:id => rating.to_param}, valid_session
-      expect(response).to redirect_to(ratings_url)
+      delete :destroy, {:id => rating.to_param, book_id: book.id}, valid_session
+      expect(response).to redirect_to(book)
     end
   end
 

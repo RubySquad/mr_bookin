@@ -1,15 +1,17 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource  
+  # before_action :set_book, only: [:show, :edit, :update, :destroy]
 
   # GET /books
   # GET /books.json
   def index
-    @books = Book.all
+    # @books = Book.all
   end
 
   # GET /books/1
   # GET /books/1.json
   def show
+    @ratings = @book.ratings.limit(5)
   end
 
   # GET /books/new
@@ -62,7 +64,7 @@ class BooksController < ApplicationController
   end
   
   def bestsellers
-    @bestsellers = Book.bestsellers
+    @bestsellers = Book.bestsellers(3)
   end
 
   private

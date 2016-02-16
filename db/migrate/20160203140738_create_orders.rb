@@ -1,7 +1,7 @@
 class CreateOrders < ActiveRecord::Migration
   def change
     create_table :orders do |t|
-      t.string :state,    default: "in progress", null: false
+      t.string :state,    default: "in_progress", null: false
       t.datetime :completed_date
       t.decimal :total_price, precision: 6, scale: 2, default: 0.00, null: false
       t.belongs_to :user, index: true, foreign_key: true

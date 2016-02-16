@@ -1,10 +1,11 @@
 class CreditCardsController < ApplicationController
-  before_action :set_credit_card, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
+  # before_action :set_credit_card, only: [:show, :edit, :update, :destroy]
 
   # GET /credit_cards
   # GET /credit_cards.json
   def index
-    @credit_cards = CreditCard.all
+    # @credit_cards = CreditCard.all
   end
 
   # GET /credit_cards/1

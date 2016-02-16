@@ -1,0 +1,29 @@
+<div id = "bestsellerCarousel" class = "carousel slide">
+   
+   <!-- Carousel indicators -->
+   <ol class = "carousel-indicators">
+      <% @bestsellers.count.times do |i| %>
+           <li data-target = "#bestsellerCarousel" data-slide-to = "<%= i %>" class = <%= i==0 ? "active" : "" %>></li>
+       <% end%>
+   </ol>   
+   
+   <!-- Carousel items -->
+   <div class = "carousel-inner">
+      <% @bestsellers.each_with_index do |item, index| %>
+          <div class = "item<%= index == 0 ? " active" : "" %>">
+            <div id="background">
+            <%= render partial: 'card', object: item %>
+            </div>
+          </div>
+      <% end %>
+   </div>
+   
+   <!-- Carousel nav -->
+   <a class = "carousel-control left" href = "#bestsellerCarousel" data-slide = "prev">&lsaquo;</a>
+   <a class = "carousel-control right" href = "#bestsellerCarousel" data-slide = "next">&rsaquo;</a>
+   
+</div>
+
+<center>
+   <h2>Welcome to our amazing bookstore!<br/>Choose anything you wish, we'll ship it anywhere!</h2>
+</center>

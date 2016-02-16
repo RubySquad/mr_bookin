@@ -1,21 +1,31 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  load_resource only: [:index, :show, :edit, :update, :destroy]
+  authorize_resource
+  # skip_load_resource only: [] 
+  # before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    # if Customer 
+      # @orders = current_user.recent_orders
+    # elsif Manager || Admin 
+      # @orders = Order.all
+    # end
+    # @orders = current_user.orders_by_status
+    
   end
 
   # GET /orders/1
   # GET /orders/1.json
   def show
+    @order_items = @order.order_items
   end
 
-  # GET /orders/new
-  def new
-    @order = Order.new
-  end
+  # # GET /orders/new
+  # def new
+  #   @order = Order.new
+  # end
 
   # GET /orders/1/edit
   def edit
@@ -51,20 +61,69 @@ class OrdersController < ApplicationController
     end
   end
 
-  # DELETE /orders/1
-  # DELETE /orders/1.json
-  def destroy
-    @order.destroy
-    respond_to do |format|
-      format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
-      format.json { head :no_content }
+  # # DELETE /orders/1
+  # # DELETE /orders/1.json
+  # def destroy
+  #   @order.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
+  
+  def show_cart
+    @order = get_or_create_order_from_session
+    @order_items = @order.order_items
+    render "cart"
+  end
+  
+  def add_to_cart
+    # byebug
+    id = params[:id]
+    quantity = params[:quantity].to_i
+    cart = get_or_create_order_from_session
+    cart.add_item(id, quantity)
+    cart.save
+    redirect_to cart_url
+  end
+  
+  def clear_cart
+    begin
+      cart = Order.find(session[:order_id])
+      cart.destroy
+      # cart.cancel!
+    ensure
+      session[:order_id] = nil
+      respond_to do |format|
+        format.html { redirect_to books_url, notice: 'Order was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
-
+  
+  def checkout
+    @steps = ['address', 'delivery', 'payment', 'confirm', 'complete']
+    @user = current_user
+    @order = get_or_create_order_from_session
+    render 'orders/checkout/checkout'
+  end
+      
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
       @order = Order.find(params[:id])
+    end
+    
+    def get_or_create_order_from_session
+      begin
+        order = Order.find(session[:order_id])
+      rescue ActiveRecord::RecordNotFound
+        params = {shipping_address: '_', billing_address: '_'}
+        params.merge({ user: current_user }) if user_signed_in?
+        order = Order.create(params)
+        session[:order_id] = order.id
+      end
+      order
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
