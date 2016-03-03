@@ -12,11 +12,11 @@ class Order < ActiveRecord::Base
   # belongs_to :billing_address, class_name: 'Address'
   # belongs_to :shipping_address, class_name: 'Address'
 
-  validates :total_price, presence: true
+  validates :total_price, presence: true, if: "!self.in_progress?"
   # validates :completed_date, presence: true
   validates :state, presence: true
-  validates :billing_address, presence: true
-  validates :shipping_address, presence: true
+  validates :billing_address, presence: true, if: "!self.in_progress?"
+  validates :shipping_address, presence: true, if: "!self.in_progress?"
 
 
   aasm :column => :state do
@@ -41,6 +41,10 @@ class Order < ActiveRecord::Base
     event :cancel, :success => :record_date do
       transitions :from => [:in_progress, :in_queue, :in_delivery], :to => :canceled
     end
+  end
+  
+  def state_enum 
+    aasm.states(:permitted => true).map(&:name)
   end
 
   def record_date
@@ -89,6 +93,20 @@ class Order < ActiveRecord::Base
     # byebug
     return unless can_modify?
     self.total_price = order_items.sum('quantity * price')
+  end
+  
+  def set_shipping(shipping_id=1)
+    return unless can_modify?
+    self.order_shipping = OrderShipping.new(shipping: Shipping.find(shipping_id), price: shipping)
+    
+    rescue ActiveRecord::RecordNotFound
+    
+  end
+  
+  def total_price_with_shipping
+    total = self.total_price
+    total += shipping.price if shipping
+    total
   end
   
   def empty!

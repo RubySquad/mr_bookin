@@ -7,31 +7,39 @@ class Ability
     user ||= User.new # guest user (not logged in)
       
     
-    alias_action :create, :read, :update, :destroy, :to => :crud
-    
-    can :read, [Book, Category, Author]
-    can :read, Rating, :approved => true
-    can :bestsellers, Book
-    can [:show_cart, :add_to_cart, :add_item, :clear_cart], Order, user_id: user.id
-    can :destroy, OrderItem, order: { user_id: user.id }
-    # can :manage, [Book, Order, OrderItem]
-    # can :manage, :all
-    unless user.new_record?
-      # can :dashboard                  # allow access to dashboard
-      can :read, Order, user_id: user.id
-      can :create, Rating
-      if user.role.name == 'Admin'
-        # can :access, :rails_admin       # only allow admin users to access Rails Admin
-        can :manage, :all             
-      elsif user.role.name == 'Manager'
-        can :crud, [Book, Category, Author, Country, Order, OrderItem]
-        can :update, User
-        cannot :destroy, Order
-        # cannot :clear_cart, Order, user_id: user.id
-      elsif user.role.name == 'Customer'
-        can :update, Order, user_id: user.id
-      end
-    end  
+    if user.role && user.role.name == 'Admin'
+      # can :access, :rails_admin       # only allow admin users to access Rails Admin
+      can :manage, :all             
+    else
+      
+      alias_action :create, :read, :update, :to => :cru
+      
+      can :read, [Book, Category, Author]
+      can :read, Rating, :approved => true
+      can :bestsellers, Book
+      can [:show_cart, :add_to_cart, :add_item, :clear_cart], Order, user_id: user.id
+      can :destroy, OrderItem, order: { user_id: user.id }
+      unless user.new_record?
+        # can :dashboard                  # allow access to dashboard
+        can [:read, :checkout], Order, user_id: user.id
+        can :create, Rating
+        if user.role.name == 'Manager'
+          can :access, :rails_admin
+          can :dashboard
+          can :cru, [Book, Category, Author, Country, Order, OrderItem]
+          can :update, User
+          cannot :destroy, Order
+          can :read, Rating
+          can :destroy, OrderItem
+          can :custom_order_edit, :all
+          can :approve_review, Rating
+          # cannot :clear_cart, Order, user_id: user.id
+        elsif user.role.name == 'Customer'
+          can :update, Order, user_id: user.id
+          can :cru, :CreditCard
+        end
+      end  
+    end
     #   if user.admin?
     #   else
     #     can :read, :all

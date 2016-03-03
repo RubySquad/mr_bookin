@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :category do
-    title { Faker::Book.genre }
+    title { Category.find_or_create_by(title: Faker::Book.genre) }
   end
 end

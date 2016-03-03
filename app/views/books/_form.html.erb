@@ -35,6 +35,10 @@
     <%= f.label :category_id %><br>
     <%= f.text_field :category_id %>
   </div>
+  <div class="field">
+    <%= image_tag @book.image.url(:thumb) if @book.image.exists?(:thumb) %><br>
+    <%= f.file_field :image %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

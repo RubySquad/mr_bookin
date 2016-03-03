@@ -11,7 +11,7 @@ body {
     // background:     -ms-linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
     // background:      -o-linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
     // background:         linear-gradient(40deg, #4CB8C4 10%, #EAECC6 100%);
-    background:         linear-gradient(90deg, #337AB7, #EAECC6, #337AB7);
+    // background:         linear-gradient(90deg, #337AB7, #EAECC6, #337AB7);
 }
 
 #book-title {
@@ -64,12 +64,30 @@ body {
     background-color: rgb(154, 186, 191);
 }
 
-// #book-image {
-//     border: 1px solid red;
-//     img {
-//         border: 1px solid blue;
-//     }
-// }
+.box{
+	position: relative;
+// 	width: 50%;		/* desired width */
+}
+.box:before{
+	content: "";
+	display: block;
+	padding-top: 100%; 	/* initial ratio of 1:1*/
+}
+.content{
+	position:  absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+    margin: auto;
+}
+
+.box{
+    border: 1px solid red;
+    img {
+        border: 1px solid blue;
+    }
+}
 // #book-decription {
 //     border: 1px solid red;
 // }

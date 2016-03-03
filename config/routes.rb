@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :addresses
   resources :orders, :except => [:new, :destroy] do
     resources :order_items, :only => [:destroy]
   end
+  get 'get_shipping_price/:id' => 'shippings#get_shipping_price'
     
   resources :credit_cards
   resources :countries
@@ -15,10 +17,11 @@ Rails.application.routes.draw do
   
   resources :authors
   resources :categories
-  post 'cart/:id' => 'orders#add_to_cart', as: 'add_to_cart'
-  get 'cart' => 'orders#show_cart'
-  get 'cart_clear' => 'orders#clear_cart', as: 'clear_cart'
-  get 'checkout' => 'orders#checkout'
+  post 'cart/:id'   => 'orders#add_to_cart', as: 'add_to_cart'
+  get 'cart'        => 'orders#show_cart'
+  get 'cart_clear'  => 'orders#clear_cart', as: 'clear_cart'
+  get 'checkout'    => 'orders#checkout'
+  post 'place_order' => 'orders#place'
   root 'books#bestsellers'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

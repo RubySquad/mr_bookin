@@ -5,7 +5,7 @@ FactoryGirl.define do
     total_price { Faker::Commerce.price }
     user
     # credit_card
-    shipping_address "MyText"
-    billing_address "MyText"
+    shipping_address { build(:address).to_s }
+    billing_address { build(:address).to_s }
   end
 end

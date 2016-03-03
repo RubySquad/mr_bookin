@@ -1,31 +1,44 @@
 <h1>Shop</h1>
 
 
-<% @books.each_with_index do |book, index| %>
-
-  <% if (index+1)%3==0 %>
+<div class="col-xs-10">
+  <div class="row">
+    <% @books.each_with_index do |book, index| %>
+    
+        <div class="col-xs-4 col-min portfolio-item">
+            <div class="box">
+              <%= link_to book_path(book) do %>
+                  <%= image_tag( book.image.url(:thumb), class: 'img-responsive content', alt: 'book.title') %>
+              <% end %>
+            </div>
+            <h3>
+              <%= link_to book_path(book) do %>
+                <%= book.title %>
+              <% end %>
+            </h3>
+            <p>
+              <strong>$<%= book.price %></strong>
+              <!--<%= link_to 'Add to cart', add_to_cart_path(book) %>-->
+            </p>
+        </div>
+    <% end %>
+  </div>
+</div>
+<div class="col-xs-2">
+  <div class="shop">
+    <h5 class="text-muted">SHOP BY CATEGORIES</h5>
     <div class="row">
-  <% end %>
-    <div class="col-md-4 portfolio-item">
-        <%= link_to book_path(book) do %>
-            <%= image_tag("blank_book.jpg", class: 'img-responsive', alt: 'book.title') %>
+        <%- Category.all.each do |category| %>
+          <div class="category">
+            <%= link_to category.title, books_path(category: category) %>
+          </div>
         <% end %>
-        <h3>
-          <%= link_to book_path(book) do %>
-            <%= book.title %>
-          <% end %>
-        </h3>
-        <p>
-          <strong>$<%= book.price %></strong>
-          <!--<%= link_to 'Add to cart', add_to_cart_path(book) %>-->
-        </p>
+        <%= link_to 'All', books_path %>
     </div>
-  <% if (index+1)%3==0 %>
-    </div>
-  <% end %>
-<% end %>
+  </div>
+</div>
 
 <br>
-<% if false %>
+<%- if false %>
   <%= link_to 'New Book', new_book_path %>
-<% end %>
+<%- end %>

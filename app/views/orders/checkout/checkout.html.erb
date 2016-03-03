@@ -1,33 +1,34 @@
-<div class="row">
-    <div class="col-md-3">
-        <strong>Checkout</strong>
-    </div>
-    <div class="col-md-9">    
+<%= form_for(@order, remote: true) do |f| %>
+  <div class="row">
+      <div class="col-md-3">
+          <strong>Checkout</strong>
+      </div>
+      <div class="col-md-9">    
+          <% @steps.each_with_index do |item, index| %>
+              <%= link_to item.upcase, '#', id: "link-#{item}" %>
+          <% end %>
+      </div>
+  
+  </div>
+  
+  <div id = "checkoutCarousel" class = "carousel" data-interval="false" data-wrap="false">
+     
+     <!-- Carousel items -->
+     <div class = "carousel-inner">
         <% @steps.each_with_index do |item, index| %>
-            <%= link_to item.upcase, '#', id: "link-#{item}" %>
-        <% end %>
-    </div>
-
-</div>
-
-<div id = "checkoutCarousel" class = "carousel slide">
-   
-   <!-- Carousel items -->
-   <div class = "carousel-inner">
-      <% @steps.each_with_index do |item, index| %>
-          <div class = "item<%= index == 0 ? " active" : "" %>">
-            <div id="background">
-            <%= render partial: "orders/checkout/#{item}" %>
+            <div class = "item<%= index == 0 ? " active" : "" %>" id= "<%= item %>">
+              <div id="background">
+              <%= render partial: "orders/checkout/#{item}", locals: {f: f} %>
+              </div>
             </div>
-          </div>
-      <% end %>
-   </div>
-   
-</div>
-
+        <% end %>
+     </div>
+     
+  </div>
+<% end %>
 <div style = "text-align:center;">
-  <input type = "button" class = "btn btn-default prev-slide" value = "Previous">
-  <input type = "button" class = "btn btn-primary next-slide" value = "Next">
+  <input type = "button" class = "btn btn-default prev-slide" id = "previous" value = "Previous">
+  <input type = "button" class = "btn btn-primary next-slide" id = "next" value = "Next">
 </div>
 
 <script>
@@ -40,12 +41,34 @@
     // Cycles to the next item
     $(".next-slide").click(function() {
       $("#checkoutCarousel").carousel('next');
+      $("form.edit_order").submit();
+
     });
-      
+    
+    $('#checkoutCarousel').on('slid.bs.carousel', function() {
+      hideNavigationButtons();
+    });
+    
+    function hideNavigationButtons() {
+      currentPageId = $('#checkoutCarousel .active')[0].id
+      if(currentPageId == 'address'){
+        $('input#previous').hide();
+      } else {
+        $('input#previous').show();
+      }
+      if(currentPageId == 'complete'){
+        $('input#next').hide();
+      } else {
+        $('input#next').show();
+      }
+    }
+
+    
     <% @steps.each_with_index do |item, index| %>
       $("<%= "#link-#{item}" %>").click(function() {
         $("#checkoutCarousel").carousel(<%= index %>);
       });
     <% end %>
+    hideNavigationButtons();
   });
 </script>

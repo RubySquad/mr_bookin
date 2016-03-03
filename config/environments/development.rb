@@ -44,3 +44,4 @@ end
 
 ENV['FACEBOOK_KEY'] = '1538861843082957'
 ENV['FACEBOOK_SECRET'] = '32f329e10f054f30b5edc6710b83e9bf'
+Paperclip.options[:command_path] = "/usr/bin/"

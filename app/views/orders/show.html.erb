@@ -37,6 +37,7 @@
   <thead>
     <tr>
       <th>#</th>
+      <th>Image</th>
       <th>Book</th>
       <th>Price</th>
       <th>Quantity</th>
@@ -49,6 +50,12 @@
     <% @order_items.each_with_index do |order_item, index| %>
       <tr>
         <td><%= index+1 %></td>
+        <td>
+          <%= link_to book_path(order_item.book) do%>
+            <%= image_tag order_item.book.image.url(:thumb) %>
+          <% end %>
+          </td>
+        <td>
         <td>
           <%= link_to book_path(order_item.book) do%>
             <%= order_item.book %>
@@ -65,7 +72,7 @@
       <td><strong>Total:</strong></td>
       <td>
         <strong>
-          <%= @order_items.first.order.total_price %>
+          <%= @order.total_price %>
         </strong>
       </td>
     </tr>

@@ -4,7 +4,7 @@ FactoryGirl.define do
     zipcode { Faker::Address.zip_code }
     city { Faker::Address.city }
     phone { Faker::PhoneNumber.phone_number }
-    country
+    country { Country.find_or_create_by(name: Faker::Address.country) }
     user
   end
 end

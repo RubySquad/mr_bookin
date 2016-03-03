@@ -7,6 +7,10 @@ class Book < ActiveRecord::Base
   validates :price, presence: true
   validates :stock, presence: true
   
+  has_attached_file :image, styles: { large: "600x600>", thumb: "200x200>" }, default_url: "blank_book.jpg"
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
+
+  
   scope :bestsellers, lambda {|count=nil|
     OrderItem.joins(:book)
     .group(:book)

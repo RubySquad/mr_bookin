@@ -21,3 +21,11 @@
 
 en:
   hello: "Hello world"
+  admin:
+    actions:
+      approve_review:
+        menu: 'Approve'
+      custom_order_edit:
+        menu: 'Edit'
+        title: 'Editing order...'
+        breadcrumb: 'Editing'

@@ -95,7 +95,7 @@ class OrdersController < ApplicationController
     ensure
       session[:order_id] = nil
       respond_to do |format|
-        format.html { redirect_to books_url, notice: 'Order was successfully destroyed.' }
+        format.html { redirect_to books_url, notice: 'Cart is now empty.' }
         format.json { head :no_content }
       end
     end
@@ -106,6 +106,17 @@ class OrdersController < ApplicationController
     @user = current_user
     @order = get_or_create_order_from_session
     render 'orders/checkout/checkout'
+  end
+  
+  def place
+    if @order.may_process?
+      @order.process
+    else
+      respond_to do |format|
+        format.html { redirect_to @order, notice: "Order can't be processed. Contact with support." }
+      end
+    end
+    redirect_to orders_path
   end
       
   private

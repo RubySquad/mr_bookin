@@ -164,7 +164,6 @@ RSpec.describe Order, type: :model do
   context 'aasm testd' do
     before do
       @order = Order.new
-      # subject(order) { Order.new }
     end
     it 'event process' do 
       expect(@order).to transition_from(:in_progress).to(:in_queue).on_event(:process)

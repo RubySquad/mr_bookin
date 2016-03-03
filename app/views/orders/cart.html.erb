@@ -30,7 +30,7 @@
       <tr>
         <td>
           <%= link_to book_path(order_item.book) do%>
-            <%= image_tag("blank_book.jpg") %>
+            <%= image_tag order_item.book.image.url(:thumb) %>
           <% end %>
           </td>
         <td>

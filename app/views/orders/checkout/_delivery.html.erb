@@ -1,1 +1,37 @@
-<h1>Delivery page</h1>
+<div class="row">
+  <div class="col-md-4">
+      <%= collection_radio_buttons(@order, :shipping, Shipping.all, :id, :name_with_price) do |b| %>
+        <!--content_tag(:div, content_tag(:label) { b.radio_button(:checked => session[:ptype_id], :onchange => 'ptype_set(value)') + b.text },  class: "radio")-->
+        <%= content_tag(:div, content_tag(:label) { b.radio_button( :onchange => 'set_delivery(value);') + b.text },  class: "radio") %>
+      <% end %>
+  </div>
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-4">
+    <h4>ORDER SUMMARY</h4>
+    <div class="form-group">
+      ITEM TOTAL: <%= @order.total_price %><br>
+      SHIPPING: <%= @order.shipping ? @order.shipping.price : '0.00' %><br>
+      ORDER TOTAL: <%= @order.total_price_with_shipping %>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function (){
+    
+    function get_shipping_price(value){
+      $.ajax({
+        type: "GET",
+        url: "get_shipping_price/"+value,
+        dataType: "json"     
+      })
+      .done(function(xhr) {
+        alert( xhr.responseText );
+      });
+    }
+    function set_delivery(value){
+      
+    };
+  });
+</script>

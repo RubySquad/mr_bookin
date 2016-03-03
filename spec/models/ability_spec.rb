@@ -31,16 +31,20 @@ RSpec.describe Ability, type: :model do
     it {should_not be_able_to(:read, other_order, user: other_user.to_s)}
     it {should be_able_to(:create, Rating)}
     it {should be_able_to(:update, order, user: user.to_s)}
+    it {should be_able_to(:cru, :CreditCard)}
     it {should_not be_able_to(:update, other_order, user: other_user.to_s)}
     it {should_not be_able_to(:read, rating_not_approved, approved: false)}
   end
   describe 'as manager' do
     let(:role) { Role.find_or_create_by(name: "Manager") }
     
+    it {should be_able_to(:access, :rails_admin)}
+    # it {should be_able_to(:dashboard)}
     [Book, Category, Author, Country, Order, OrderItem].each { |model|
-      it {should be_able_to(:crud, model)}
+      it {should be_able_to(:cru, model)}
     }
     it {should be_able_to(:update, User)}
+    it {should be_able_to(:approve_review, Rating)}
     it {should_not be_able_to(:destroy, Order)}
   end
   describe 'as admin' do

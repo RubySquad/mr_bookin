@@ -1,11 +1,112 @@
 <div class="row">
-    <div class="col-md-4">
-        <h4>BILLING ADDRESS</h4>
+  <div class="col-md-4">
+    <h4>BILLING ADDRESS</h4>
+    <div id="billing_address">
+      <div class="form-group">
+        <%= f.collection_select :billing_address, @user.addresses, :to_s, :address, {selected: @user.default_address}, {class: "form-control"} %>
+      </div>
+      <button type="button" class="btn btn-primary" id='add_new_billing_address'>Add new</button>
+      <br/>
+      <br/>
+      <div class="form-group">
+        <%= f.text_area :billing_address, rows: 5, id: 'order_billing_address_box', class: "form-control" %>
+      </div>  
     </div>
-    <div class="col-md-4">
-        <h4>SHIPPING ADDRESS</h4>
+    <div id="new_billing_address", style="display: none;">
+      <%= f.fields_for([@user, Address.new]) do |billing_address_builder| %>
+        <div class="form-group">
+          <%= billing_address_builder.label :address %><br>
+          <%= billing_address_builder.text_field :address, class: "form-control"%>
+        </div>
+        <div class="form-group">
+          <%= billing_address_builder.label :city %><br>
+          <%= billing_address_builder.text_field :city, class: "form-control"%>
+        </div>
+        <div class="form-group">
+          <%= billing_address_builder.label :country %><br>
+          <%= billing_address_builder.text_field :country, class: "form-control"%>
+        </div>
+        <div class="form-group">
+          <%= billing_address_builder.label :zipcode %><br>
+          <%= billing_address_builder.text_field :zipcode, class: "form-control"%>
+        </div>
+        <div class="form-group">
+          <%= billing_address_builder.label :phone %><br>
+          <%= billing_address_builder.text_field :phone, class: "form-control"%>
+        </div>
+        
+      <% end %>
     </div>
-    <div class="col-md-4">
-        <h4>ORDER SUMMARY</h4>
+    
+  </div>
+  <div class="col-md-4">
+    <h4>SHIPPING ADDRESS</h4>
+    <div id="shipping_address">
+      <div class="form-group">
+        <%= f.collection_select :shipping_address, @user.addresses, :to_s, :address, {selected: @user.default_address}, {class: "form-control"} %>
+      </div>
+      <button type="button" class="btn btn-primary" id='add_new_shipping_address'>Add new</button>
+      <br/>
+      <br/>
+      <div class="form-group">
+        <%= f.text_area :shipping_address, rows: 5, id: 'order_shipping_address_box', class: "form-control" %>
+      </div>
+      <div id="new_shipping_address", style="display: none;">
+        <%= f.fields_for([@user, Address.new]) do |shipping_address_builder| %>
+          <div class="form-group">
+            <%= shipping_address_builder.label :address %><br>
+            <%= shipping_address_builder.text_field :address, class: "form-control"%>
+          </div>
+          <div class="form-group">
+            <%= shipping_address_builder.label :city %><br>
+            <%= shipping_address_builder.text_field :city, class: "form-control"%>
+          </div>
+          <div class="form-group">
+            <%= shipping_address_builder.label :country %><br>
+            <%= shipping_address_builder.text_field :country, class: "form-control"%>
+          </div>
+          <div class="form-group">
+            <%= shipping_address_builder.label :zipcode %><br>
+            <%= shipping_address_builder.text_field :zipcode, class: "form-control"%>
+          </div>
+          <div class="form-group">
+            <%= shipping_address_builder.label :phone %><br>
+            <%= shipping_address_builder.text_field :phone, class: "form-control"%>
+          </div>
+        </div>
+      <% end %>
     </div>
+  </div>
+  <div class="col-md-4">
+    <h4>ORDER SUMMARY</h4>
+    <div class="form-group">
+      ITEM TOTAL: <%= @order.total_price %><br>
+      ORDER TOTAL: <%= @order.total_price %>
+    </div>
+  </div>
 </div>
+
+<script>
+  $(function(){
+    refreshShippingAddress();
+    refreshBillingAddress();
+  });
+  function refreshShippingAddress() {
+    $('#order_shipping_address_box')[0].value = $('#order_shipping_address')[0].value;
+  };
+  function refreshBillingAddress() {
+    $('#order_billing_address_box')[0].value = $('#order_billing_address')[0].value;
+  };
+  
+  $('#order_shipping_address').change(refreshShippingAddress);
+  $('#order_billing_address').change(refreshBillingAddress);
+  
+  $('#add_new_billing_address').click(function(){
+    $('#new_billing_address').show();
+    $('#order_billing_address_box').hide();
+  });
+  $('#add_new_shipping_address').click(function(){
+    $('#new_shipping_address').show();
+    $('#order_shipping_address_box').hide();
+  });
+</script>
