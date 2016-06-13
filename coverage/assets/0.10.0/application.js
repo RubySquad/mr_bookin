@@ -1527,9 +1527,9 @@ jQuery.url = function()
 	return {
 		
 	    /**
-	     * Sets the parsing mode - either strict or loose. Set to loose by default.
+	     * Sets the parsing mode - either strict or loose. Set to lose by default.
 	     *
-	     * @param string mode The mode to set the parser to. Anything apart from a value of 'strict' will set it to loose!
+	     * @param string mode The mode to set the parser to. Anything apart from a value of 'strict' will set it to lose!
 	     */
 		setMode : function( mode )
 		{
